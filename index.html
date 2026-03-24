@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Prompts — Digital Marketing</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,900;1,300;1,600&family=Geist+Mono:wght@300;400;500&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf9f7;
+    --surface: #ffffff;
+    --surface2: #f3f1ee;
+    --border: #e5e2dc;
+    --ink: #1a1814;
+    --muted: #9b9690;
+    --hub: #e8541a;      /* HubSpot orange */
+    --teal: #0d7c66;     /* GA4 / analytics */
+    --navy: #1e3a5f;     /* sponsored / sales */
+    --plum: #6b3fa0;     /* metrics / storytelling */
+    --slate: #374151;    /* strategy */
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Geist', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 280px;
+    overflow: hidden;
+  }
+
+  .header-left {
+    padding: 52px 52px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--hub);
+    margin-bottom: 20px;
+  }
+
+  .role-badge::before {
+    content: '';
+    display: block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--hub);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  header h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  header h1 em {
+    font-style: italic;
+    font-weight: 300;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .header-desc {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.7;
+    margin-top: 16px;
+    max-width: 380px;
+  }
+
+  .header-right {
+    padding: 40px 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: rgba(255,255,255,0.06);
+  }
+
+  .stat-cell {
+    background: var(--ink);
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+
+  .stat-num {
+    font-family: 'Fraunces', serif;
+    font-size: 2.4rem;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+  }
+
+  .stat-cell:nth-child(1) .stat-num { color: var(--hub); }
+  .stat-cell:nth-child(2) .stat-num { color: var(--teal); }
+  .stat-cell:nth-child(3) .stat-num { color: var(--plum); }
+  .stat-cell:nth-child(4) .stat-num { color: #fff; opacity: 0.6; }
+
+  /* ── TOOLS STRIP ── */
+  .tools-strip {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 48px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .tool-chip {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 2px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  .chip-hub { border-color: rgba(232,84,26,0.3); color: var(--hub); background: rgba(232,84,26,0.05); }
+  .chip-ga4 { border-color: rgba(13,124,102,0.3); color: var(--teal); background: rgba(13,124,102,0.05); }
+  .chip-seo { border-color: rgba(107,63,160,0.3); color: var(--plum); background: rgba(107,63,160,0.05); }
+
+  .tools-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-right: 6px;
+  }
+
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 48px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 0 var(--border);
+  }
+
+  .filter-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-right: 8px;
+  }
+
+  .filter-btn {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 5px 14px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.15s;
+    border-radius: 2px;
+  }
+
+  .filter-btn:hover { color: var(--ink); border-color: var(--ink); }
+  .filter-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+  /* ── GRID ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    grid-column: 1 / -1;
+    background: var(--surface2);
+    padding: 16px 48px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .section-pip {
+    width: 3px;
+    height: 20px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .pip-hub { background: var(--hub); }
+  .pip-ga4 { background: var(--teal); }
+  .pip-sponsored { background: var(--navy); }
+  .pip-metrics { background: var(--plum); }
+  .pip-strategy { background: var(--slate); }
+
+  .section-header h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .section-line { flex: 1; height: 1px; background: var(--border); }
+
+  .section-count {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface);
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: background 0.15s;
+    animation: fadeIn 0.25s ease both;
+  }
+
+  .card:hover { background: #fdfcfb; }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-num {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .card-tag {
+    font-family: 'Geist Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 2px;
+  }
+
+  .tag-hub { background: rgba(232,84,26,0.08); color: var(--hub); }
+  .tag-ga4 { background: rgba(13,124,102,0.08); color: var(--teal); }
+  .tag-sponsored { background: rgba(30,58,95,0.08); color: var(--navy); }
+  .tag-metrics { background: rgba(107,63,160,0.08); color: var(--plum); }
+  .tag-strategy { background: rgba(55,65,81,0.08); color: var(--slate); }
+  .tag-seo { background: rgba(107,63,160,0.08); color: var(--plum); }
+
+  .card-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.25;
+  }
+
+  .card-prompt {
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    color: #5a5750;
+    background: var(--bg);
+    border-left: 2px solid var(--border);
+    padding: 13px 15px;
+    border-radius: 0 3px 3px 0;
+  }
+
+  .card[data-cat="hubspot"] .card-prompt { border-left-color: var(--hub); }
+  .card[data-cat="ga4"] .card-prompt { border-left-color: var(--teal); }
+  .card[data-cat="sponsored"] .card-prompt { border-left-color: var(--navy); }
+  .card[data-cat="metrics"] .card-prompt { border-left-color: var(--plum); }
+  .card[data-cat="strategy"] .card-prompt { border-left-color: var(--slate); }
+
+  .ph {
+    font-weight: 500;
+    font-style: normal;
+  }
+
+  .card[data-cat="hubspot"] .ph { color: var(--hub); }
+  .card[data-cat="ga4"] .ph { color: var(--teal); }
+  .card[data-cat="sponsored"] .ph { color: var(--navy); }
+  .card[data-cat="metrics"] .ph { color: var(--plum); }
+  .card[data-cat="strategy"] .ph { color: var(--slate); }
+
+  /* metric pill list inside prompts */
+  .metric-list {
+    display: inline;
+  }
+
+  .copy-btn {
+    align-self: flex-end;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border-radius: 2px;
+  }
+
+  .copy-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .copy-btn.copied { border-color: var(--teal); color: var(--teal); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: rgba(255,255,255,0.3);
+    padding: 22px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+
+  footer span { color: var(--hub); }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 700px) {
+    header { grid-template-columns: 1fr; }
+    .header-right { display: none; }
+    .header-left, .filter-bar, .tools-strip, footer { padding-left: 24px; padding-right: 24px; }
+    .section-header { padding-left: 24px; padding-right: 24px; }
+    .card { padding: 22px 24px; }
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div>
+      <div class="role-badge">Digital Marketing</div>
+      <h1>AI Prompts for<br><em>Smarter</em> Digital Work</h1>
+      <p class="header-desc">HubSpot email, GA4 analysis, sponsored content, data storytelling, and SEO-forward copy — built for your day-to-day workflow.</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="stat-cell">
+      <div class="stat-num">22</div>
+      <div class="stat-label">Prompts</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">5</div>
+      <div class="stat-label">Categories</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Core Tools</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">∞</div>
+      <div class="stat-label">Applications</div>
+    </div>
+  </div>
+</header>
+
+<div class="tools-strip">
+  <span class="tools-label">Built for —</span>
+  <span class="tool-chip chip-hub">HubSpot</span>
+  <span class="tool-chip chip-ga4">Google Analytics 4</span>
+  <span class="tool-chip chip-seo">SEO / AI Search</span>
+  <span class="tool-chip">Sponsored Content</span>
+  <span class="tool-chip">Media Kit</span>
+  <span class="tool-chip">Campaign Reporting</span>
+</div>
+
+<div class="filter-bar">
+  <span class="filter-label">Filter —</span>
+  <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
+  <button class="filter-btn" onclick="filterCards('hubspot', this)">HubSpot & Email</button>
+  <button class="filter-btn" onclick="filterCards('ga4', this)">GA4 & Analytics</button>
+  <button class="filter-btn" onclick="filterCards('sponsored', this)">Sponsored & Sales</button>
+  <button class="filter-btn" onclick="filterCards('metrics', this)">Metrics & Storytelling</button>
+  <button class="filter-btn" onclick="filterCards('strategy', this)">Strategy & Copy</button>
+</div>
+
+<div class="grid" id="grid">
+
+  <!-- HUBSPOT & EMAIL -->
+  <div class="section-header">
+    <div class="section-pip pip-hub"></div>
+    <h2>HubSpot & Email Marketing</h2>
+    <div class="section-line"></div>
+    <span class="section-count">5 prompts</span>
+  </div>
+
+  <div class="card" data-cat="hubspot">
+    <div class="card-header">
+      <span class="card-num">01</span>
+      <span class="card-tag tag-hub">HubSpot</span>
+    </div>
+    <div class="card-title">HubSpot Email Performance Audit</div>
+    <div class="card-prompt">Here are the HubSpot performance metrics from my last <span class="ph">[5 / 10]</span> email sends: <span class="ph">[paste: send date, subject line, list size, Clicks %, Click-Through Rate %, unsubscribes, bounces]</span>. Identify patterns across what's working and what's underperforming. Flag any deliverability concerns based on bounce or unsubscribe trends. Give me 3 specific changes to test in my next send based on the data.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">Copy Prompt</button>
+  </div>
+
+  <div class="card" data-cat="hubspot">
+    <div class="card-header">
+      <span class="card-num">02</span>
+      <span class="card-tag tag-hub">HubSpot</span>
+    </div>
+    <div class="card-title">Subject Line Generator</div>
+    <div class="card-prompt">Write 10 email subject lines for <span class="ph">[brand/publication]</span> promoting <span class="ph">[offer / sponsored content / editorial / event]</span> to <span class="ph">[audience segment]</span>. Vary the approach across: curiosity, urgency, benefit-led, conversational, and direct. Flag your top 3 picks for A/B testing in HubSpot and explain why each would likely perform. Keep all lines under 50 characters.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">Copy Prompt</button>
+  </div>
+
+  <div class="card" data-cat="hubspot">
+    <div class="card-header">
+      <span class="card-num">03</span>
+      <span class="card-tag tag-hub">Email</span>
+    </div>
+    <div class="card-title">Sponsored Email Writer</div>
+    <div class="card-prompt">Write a sponsored email for <span class="ph">[publication]</span> on behalf of <span class="ph">[brand partner]</span> promoting <span class="ph">[offer / event / product / content]</span> to <span class="ph">[subscriber audience]</span>. Include: subject line, preview text, opening hook, 2–3 sentences of body copy that feel editorial not salesy, a clear CTA button label, and an optional P.S. line. Tone: <span class="ph">[warm / premium / direct]</span>.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">Copy Prompt</button>
+  </div>
+
+  <div class="card" data-cat="hubspot">
+    <div class="card-header">
+      <span class="card-num">04</span>
+      <span class="card-tag tag-hub">Email</span>
+    </div>
+    <div class="card-title">Nurture Sequence Builder</div>
+    <div class="card-prompt">Build a 4-email nurture sequence in HubSpot for <span class="ph">[brand]</span> targeting <span class="ph">[new subscriber / lead / past customer]</span>. Each email should have a clear, distinct purpose: welcome and set expectations, educate or add value, build trust with proof, then convert. For each: subject line, preview text, and 2–3 sentence body copy direction. Note the recommended send delay between each email.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">Copy Prompt</button>
+  </div>
+
+  <div class="card" data-cat="hubspot">
+    <div class="card-header">
+      <span class="card-num">05</span>
+      <span class="card-tag tag-hub">Email</span>
+    </div>
+    <div class="card-title">Re-Engagement Campaign</div>
+    <div class="card-prompt">Write a 2-email re-engagement sequence for <span class="ph">[brand]</span> in HubSpot targeting contacts who haven't opened in <span class="ph">[60 / 90 / 180]</span> days. Email 1: a warm, low-pressure "we miss you" with a clear reason to re-engage. Email 2: a final send with a compelling value offer and an honest message about what happens if they don't engage. Keep both under 120 words and flag recommended HubSpot suppression steps after the sequence.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">Copy Prompt</button>
+  </div>
+
+  <!-- GA4 & ANALYTICS -->
+  <div class="section-header">
+    <div class="section-pip pip-ga4"></div>
+    <h2>GA4 & Website Analytics</h2>
+    <div class="section-line"></div>
+    <span class="section-count">5 prompts</span>
+  </div>
+
+  <div class="card" data-cat="ga4">
+    <div class="card-header">
+      <span class="card-num">06</span>
+      <span class="card-tag tag-ga4">GA4</span>
+    </div>
+    <div class="card-title">GA4 Website Performance Interpreter</div>
+    <div class="card-prompt">Here is our GA4 data for <span class="ph">[date range]</span>: <span class="ph">[paste metrics]</span> — including Engagement Rate, Sessions, Total Users, Views, Pages Per Session, and % of Returning Visitors. Interpret what this data is actually telling me about how our audience is using the site. Flag anything that needs attention and suggest 2–3 specific actions based on what you see. Explain any metric that is outside a healthy range.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">Copy Prompt</button>
+  </div>
+
+  <div class="card" data-cat="ga4">
+    <div class="card-header">
+      <span class="card-num">07</span>
+      <span class="card-tag tag-ga4">GA4</span>
+    </div>
+    <div class="card-title">Traffic Source Analysis</div>
+    <div class="card-prompt">Analyze the following GA4 traffic source breakdown for our site over <span class="ph">[date range]</span>: <span class="ph">[paste: organic search, direct, referral, paid, social, email session and user data]</span>. Tell me which channels are driving quality, engaged traffic vs. just raw volume. Where is there overdependence or a clear missed opportunity? Recommend one specific action per underperforming channel.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">Copy Prompt</button>
+  </div>
+
+  <div class="card" data-cat="ga4">
+    <div class="card-header">
+      <span class="card-num">08</span>
+      <span class="card-tag tag-ga4">GA4</span>
+    </div>
+    <div class="card-title">Conversion Funnel Diagnosis</div>
+    <div class="card-prompt">Here is our GA4 funnel data for <span class="ph">[goal: form submission / newsletter signup / contact page visit / sponsored content click-through]</span>: <span class="ph">[paste step-by-step drop-off data]</span>. Identify where the biggest drop-off is happening and give me 3 hypotheses for why. For each hypothesis, suggest a specific fix or test I can run to validate it — including any GA4 event or goal tracking adjustments I should make.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">Copy Prompt</button>
+  </div>
+
+  <div class="card" data-cat="ga4">
+    <div class="card-header">
+      <span class="card-num">09</span>
+      <span class="card-tag tag-ga4">GA4</span>
+    </div>
+    <div class="card-title">Monthly Analytics Summary</div>
+    <div class="card-prompt">Using our GA4 data from <span class="ph">[month]</span> — including Engagement Rate, Sessions, Total Users, Views, Pages Per Session, and % of Returning Visitors: <span class="ph">[paste metrics]</span> — write a concise monthly analytics summary I can share with a non-technical stakeholder or advertiser. No jargon. Lead with the most important takeaway, contextualize the numbers against last month or last year, and close with what we're focusing on next month.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">Copy Prompt</button>
+  </div>
+
+  <div class="card" data-cat="ga4">
+    <div class="card-header">
+      <span class="card-num">10</span>
+      <span class="card-tag tag-ga4">GA4</span>
+    </div>
+    <div class="card-title">Returning vs. New Visitor Analysis</div>
+    <div class="card-prompt">Our GA4 data shows a Returning Visitor rate of <span class="ph">[X%]</span> against a New Visitor rate of <span class="ph">[Y%]</span> for <span class="ph">[date range]</span>. Total Users: <span class="ph">[N]</span>. Interpret what this split tells us about audience loyalty and content performance. Is this ratio healthy for a <span class="ph">[regional lifestyle / bridal / media]</span> publication? What content or CTA strategies could improve return visit rates?</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">Copy Prompt</button>
+  </div>
+
+  <!-- SPONSORED & SALES -->
+  <div class="section-header">
+    <div class="section-pip pip-sponsored"></div>
+    <h2>Sponsored Content & Sales Materials</h2>
+    <div class="section-line"></div>
+    <span class="section-count">5 prompts</span>
+  </div>
+
+  <div class="card" data-cat="sponsored">
+    <div class="card-header">
+      <span class="card-num">11</span>
+      <span class="card-tag tag-sponsored">Sales</span>
+    </div>
+    <div class="card-title">Media Kit / One-Sheet Copy</div>
+    <div class="card-prompt">Write the copy for a digital media kit one-sheet for <span class="ph">[publication/brand]</span> targeting <span class="ph">[advertiser type: luxury / wedding / lifestyle / regional]</span>. Include: a value proposition headline, audience snapshot with key stats, reach and engagement metrics, advertising opportunities overview, and a closing CTA. Tone: confident and data-forward without feeling like a hard sell. Keep it to one tight page of copy.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">Copy Prompt</button>
+  </div>
+
+  <div class="card" data-cat="sponsored">
+    <div class="card-header">
+      <span class="card-num">12</span>
+      <span class="card-tag tag-sponsored">Sales</span>
+    </div>
+    <div class="card-title">Sponsored Content Proposal</div>
+    <div class="card-prompt">Write a sponsorship proposal for <span class="ph">[publication]</span> pitching <span class="ph">[campaign or content package]</span> to <span class="ph">[advertiser]</span>. Structure it as: the opportunity, the audience fit, the deliverables, the projected impact, and investment. Frame everything from the advertiser's perspective — what they gain — not just what we're offering. Include a placeholder for our GA4 reach metrics. Keep it under one page.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">Copy Prompt</button>
+  </div>
+
+  <div class="card" data-cat="sponsored">
+    <div class="card-header">
+      <span class="card-num">13</span>
+      <span class="card-tag tag-sponsored">Sponsored</span>
+    </div>
+    <div class="card-title">Sponsored Content Article</div>
+    <div class="card-prompt">Write a sponsored content article for <span class="ph">[publication]</span> on behalf of <span class="ph">[brand partner]</span> about <span class="ph">[topic]</span>. It should read as editorial — genuinely useful and engaging — not as an advertisement. Naturally integrate the brand's key message and include a soft CTA near the end. Reader: <span class="ph">[audience profile]</span>. Word count: <span class="ph">[400–600 / 600–900]</span>. The article must be optimized for SEO, AI search (Google SGE, ChatGPT, Perplexity), GEO (Generative Engine Optimization), and AEO (Answer Engine Optimization) — especially in the first paragraph, which should directly answer the reader's likely search intent using natural language, target keywords, and a clear, quotable statement that AI engines can surface as a featured answer.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">Copy Prompt</button>
+  </div>
+
+  <div class="card" data-cat="sponsored">
+    <div class="card-header">
+      <span class="card-num">14</span>
+      <span class="card-tag tag-sponsored">Sponsored</span>
+    </div>
+    <div class="card-title">Campaign Recap for Advertiser</div>
+    <div class="card-prompt">Write a post-campaign recap report for <span class="ph">[advertiser]</span> summarizing the results of <span class="ph">[campaign name]</span>. Include: campaign overview, key metrics delivered vs. promised (use our GA4 data: <span class="ph">[paste relevant stats]</span>), highlights such as top-performing placements or content moments, and a forward-looking recommendation for the next campaign. Tone: confident and client-ready. Lead with the win.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">Copy Prompt</button>
+  </div>
+
+  <div class="card" data-cat="sponsored">
+    <div class="card-header">
+      <span class="card-num">15</span>
+      <span class="card-tag tag-sponsored">Sales</span>
+    </div>
+    <div class="card-title">Advertiser Follow-Up Email</div>
+    <div class="card-prompt">Write a follow-up email to <span class="ph">[advertiser / prospect]</span> after <span class="ph">[a proposal send / a campaign wrap / an initial conversation]</span>. The goal is to <span class="ph">[re-engage / upsell / renew / get a decision]</span>. Keep it under 100 words, reference something specific from our last interaction, and make the ask clear without being pushy. Include a subject line.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">Copy Prompt</button>
+  </div>
+
+  <!-- METRICS & STORYTELLING -->
+  <div class="section-header">
+    <div class="section-pip pip-metrics"></div>
+    <h2>Metrics & Data Storytelling</h2>
+    <div class="section-line"></div>
+    <span class="section-count">4 prompts</span>
+  </div>
+
+  <div class="card" data-cat="metrics">
+    <div class="card-header">
+      <span class="card-num">16</span>
+      <span class="card-tag tag-metrics">Storytelling</span>
+    </div>
+    <div class="card-title">Turn Data into a Narrative</div>
+    <div class="card-prompt">Here are performance metrics from <span class="ph">[campaign / month / channel]</span>: <span class="ph">[paste data]</span>. Don't just summarize the numbers — build a story around them. What happened, why it matters, what it means for the business, and what comes next. Write it so a non-marketer — an advertiser, publisher, or executive — would find it both clear and compelling in a meeting setting.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">Copy Prompt</button>
+  </div>
+
+  <div class="card" data-cat="metrics">
+    <div class="card-header">
+      <span class="card-num">17</span>
+      <span class="card-tag tag-metrics">Storytelling</span>
+    </div>
+    <div class="card-title">Explain a Metric to a Client</div>
+    <div class="card-prompt">Explain what <span class="ph">[metric: Engagement Rate / Pages Per Session / % Returning Visitors / Click-Through Rate / Open Rate / Bounce Rate]</span> means in plain language for an advertiser who is not a marketer. Cover: what it measures, what a healthy number looks like for a regional media brand, and why they should care. Keep it under 150 words with no jargon.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">Copy Prompt</button>
+  </div>
+
+  <div class="card" data-cat="metrics">
+    <div class="card-header">
+      <span class="card-num">18</span>
+      <span class="card-tag tag-metrics">Reporting</span>
+    </div>
+    <div class="card-title">Quarterly & Monthly Performance Report</div>
+    <div class="card-prompt">Using this data from <span class="ph">[month / quarter]</span>: <span class="ph">[paste GA4 metrics + HubSpot email metrics + any campaign data]</span>, write a performance report for <span class="ph">[internal team / advertiser / leadership]</span>. Structure: 3-sentence executive summary, channel-by-channel highlights (website, email, sponsored), what underperformed and why, and 3 priorities for the next period. Written in human language — data-informed, not data-drowning.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">Copy Prompt</button>
+  </div>
+
+  <div class="card" data-cat="metrics">
+    <div class="card-header">
+      <span class="card-num">19</span>
+      <span class="card-tag tag-metrics">Reporting</span>
+    </div>
+    <div class="card-title">Benchmark Comparison Write-Up</div>
+    <div class="card-prompt">Here are our current metrics: <span class="ph">[paste GA4 and/or HubSpot data]</span>. Apply industry benchmarks for a <span class="ph">[regional media / lifestyle publication / bridal media]</span> brand and write a comparison narrative. Where are we outperforming? Where are we lagging? Frame every gap as an opportunity rather than a failure, and suggest one specific action for each area where we're behind.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">Copy Prompt</button>
+  </div>
+
+  <!-- STRATEGY & COPY -->
+  <div class="section-header">
+    <div class="section-pip pip-strategy"></div>
+    <h2>Strategy, SEO & Copy</h2>
+    <div class="section-line"></div>
+    <span class="section-count">3 prompts</span>
+  </div>
+
+  <div class="card" data-cat="strategy">
+    <div class="card-header">
+      <span class="card-num">20</span>
+      <span class="card-tag tag-seo">SEO / AI Search</span>
+    </div>
+    <div class="card-title">SEO & AI-Search Friendly Sponsored Content</div>
+    <div class="card-prompt">Rewrite or optimize the following sponsored content page for both traditional SEO and AI-powered search (Google SGE, ChatGPT, Perplexity): <span class="ph">[paste existing copy or describe the page topic]</span>. Target keyword or topic: <span class="ph">[keyword]</span>. Optimize the headline, meta description, subheadings, and first paragraph for search intent. Use natural language that answers likely reader questions directly. Flag where to add internal links, schema markup opportunities, and any FAQ section that would help AI search surfaces pick up this content.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">Copy Prompt</button>
+  </div>
+
+  <div class="card" data-cat="strategy">
+    <div class="card-header">
+      <span class="card-num">21</span>
+      <span class="card-tag tag-strategy">Strategy</span>
+    </div>
+    <div class="card-title">Campaign Brief Writer</div>
+    <div class="card-prompt">Write a digital campaign brief for <span class="ph">[brand/publication]</span> for <span class="ph">[campaign goal: lead gen / brand awareness / sponsored content push / event promotion]</span>. Include: campaign objective, target audience, key message, channels and formats (email, web, social), success metrics tied to our GA4 and HubSpot KPIs, timeline, and budget notes. Format it so a designer, writer, and account manager can each pull what they need from it independently.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">Copy Prompt</button>
+  </div>
+
+  <div class="card" data-cat="strategy">
+    <div class="card-header">
+      <span class="card-num">22</span>
+      <span class="card-tag tag-strategy">Strategy</span>
+    </div>
+    <div class="card-title">Landing Page CRO Review</div>
+    <div class="card-prompt">Review the following landing page copy for <span class="ph">[campaign / sponsored content / advertiser offer]</span>: <span class="ph">[paste copy or describe the page]</span>. Evaluate: headline clarity, value proposition strength, CTA effectiveness, trust signals, and friction points. Rewrite the headline and CTA button label. Give 3 conversion rate optimization recommendations ranked by expected impact, and flag any GA4 event tracking we should set up to measure improvement.</div>
+    <button class="copy-btn" onclick="copyPrompt(this)">Copy Prompt</button>
+  </div>
+
+</div>
+
+<footer>
+  <div>22 Prompts · Replace all <span>[bracketed placeholders]</span> with your specifics</div>
+  <div>HubSpot · GA4 · Sponsored Content · NJ Monthly</div>
+</footer>
+
+<script>
+  function filterCards(cat, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.card').forEach(card => {
+      card.style.display = (cat === 'all' || card.dataset.cat === cat) ? '' : 'none';
+    });
+    document.querySelectorAll('.section-header').forEach(header => {
+      if (cat === 'all') { header.style.display = ''; return; }
+      let next = header.nextElementSibling;
+      let hasVisible = false;
+      while (next && !next.classList.contains('section-header')) {
+        if (next.dataset.cat === cat) hasVisible = true;
+        next = next.nextElementSibling;
+      }
+      header.style.display = hasVisible ? '' : 'none';
+    });
+  }
+
+  function copyPrompt(btn) {
+    const text = btn.previousElementSibling.innerText.replace(/\n/g, ' ');
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓ Copied';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy Prompt'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+</script>
+</body>
+</html>
